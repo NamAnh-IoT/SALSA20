@@ -1,4 +1,5 @@
 #include<stdint.h>
+#include<stdio.h>
 #include<stddef.h>
 #include "salsa20.h"
 
@@ -114,33 +115,46 @@ enum s20_status_t s20crypt(uint8_t *key,
     return S_20_SUCCESS;
 }
 
-int main() {
-    uint8_t key[32] = {
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-        17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
-    };
-    uint8_t nonce[8] = { 101, 102, 103, 104, 105, 106, 107, 108 };
+// int main() {
+//     // 1. Khai báo Key (256-bit = 32 byte) và Nonce/IV (64-bit = 8 byte)
+//     uint8_t key[32] = {
+//         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+//         17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
+//     };
+//     uint8_t nonce[8] = { 101, 102, 103, 104, 105, 106, 107, 108 };
     
-    char plaintext[] = "Day la doan text de kiem tra thuat toan Salsa20!";
-    uint32_t len = strlen(plaintext);
+//     // 2. Để lấy Keystream thuần túy, đầu vào phải là mảng toàn số 0 (0x00)
+//     uint8_t input_zeros[64] = {0}; 
+//     uint8_t keystream[64] = {0};
+
+//     // 3. Chạy thuật toán với Counter = 0
+//     s20crypt(key, S_20_KEY_256, nonce, 0, input_zeros, keystream, 64);
+
+//     // 4. In ra màn hình theo đúng format của file eSTREAM testvector.256
+//     printf("Set 1, vector# Custom:\n");
     
-    uint8_t ciphertext[100] = {0};
-    uint8_t decrypted[100] = {0};
-
-    printf("Ban ro: %s\n", plaintext);
-
-    s20crypt(key, S_20_KEY_256, nonce, 0, (uint8_t*)plaintext, ciphertext, len);
+//     // In Key
+//     printf("                         key = ");
+//     for(int i = 0; i < 32; i++) {
+//         printf("%02X", key[i]);
+//     }
+//     printf("\n");
     
-    printf("Ban ma (Hex): ");
-    for (uint32_t i = 0; i < len; i++) {
-        printf("%02x ", ciphertext[i]);
-    }
-    printf("\n");
-
-    s20crypt(key, S_20_KEY_256, nonce, 0, ciphertext, decrypted, len);
-    decrypted[len] = '\0'; 
-
-    printf("Giai ma: %s\n", decrypted);
-
-    return 0;
-}
+//     // In IV (Nonce)
+//     printf("                          IV = ");
+//     for(int i = 0; i < 8; i++) {
+//         printf("%02X", nonce[i]);
+//     }
+//     printf("\n");
+    
+//     // In Keystream (ngắt dòng mỗi 32 ký tự Hex = 16 byte để giống format chuẩn)
+//     printf("               stream[0..63] = ");
+//     for(int i = 0; i < 64; i++) {
+//         printf("%02X", keystream[i]);
+//         if ((i + 1) % 16 == 0 && i != 63) {
+//             printf("\n                               ");
+//         }
+//     }
+//     printf("\n\n");
+//     return 0;
+// }
