@@ -9,8 +9,8 @@ Cụ thể, ban đầu thuật toán sẽ tạo ra 1 ma trận 4x4<br>
 [c1] [c2] [C3] [K5]<br>
 [K6] [K7] [K8] [C4]<br>
 
-Với *C là Constant (hằng số mặc định của thuật toán)
-    *K là Key 32 bytes được tách thành 8 mảnh 32 bit
-    *N là Nonce 8 bytes được tách thành 2 mảnh 32 bit
-    *c là counter 8 bytes và tăng 1 sau mỗi lần chạy
+Với <br>&emsp;C là Constant (hằng số mặc định của thuật toán)
+    <br>&emsp;K là Key 32 bytes được tách thành 8 mảnh 32 bit
+    <br>&emsp;N là Nonce 8 bytes được tách thành 2 mảnh 32 bit
+    <br>&emsp;c là counter 8 bytes và tăng 1 sau mỗi lần chạy
 Mỗi lần chạy Nonce cần được thay đổi và không được trùng lặp để tránh bị XOR 2 ciphertext làm triệt tiêu keystream
