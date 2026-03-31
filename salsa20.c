@@ -7,6 +7,7 @@ static uint32_t rotl(uint32_t x, int n) {
     return (x << n) | (x >> (32 - n));
 }
 
+//Quarter-round function
 static void s20_quarterround(uint32_t *y0, uint32_t *y1, uint32_t *y2, uint32_t *y3) {
     *y1 ^= rotl(*y0 + *y3, 7);
     *y2 ^= rotl(*y1 + *y0, 9);
@@ -14,6 +15,7 @@ static void s20_quarterround(uint32_t *y0, uint32_t *y1, uint32_t *y2, uint32_t 
     *y0 ^= rotl(*y3 + *y2, 18);
 }
 
+//Biển đổi trên hàng
 static void s20_rowround(uint32_t y[16]) {
     s20_quarterround(&y[0], &y[1], &y[2], &y[3]);
     s20_quarterround(&y[5], &y[6], &y[7], &y[4]);
@@ -21,6 +23,7 @@ static void s20_rowround(uint32_t y[16]) {
     s20_quarterround(&y[15], &y[12], &y[13], &y[14]);
 }
 
+//Biến đổi trên cột
 static void s20_columnround(uint32_t x[16]) {
     s20_quarterround(&x[0], &x[4], &x[8], &x[12]);
     s20_quarterround(&x[5], &x[9], &x[13], &x[1]);
@@ -28,6 +31,7 @@ static void s20_columnround(uint32_t x[16]) {
     s20_quarterround(&x[15], &x[3], &x[7], &x[11]);
 }
 
+//Kết hợp cả hai biến đổi trên hàng và cột
 static void s20_doubleround(uint32_t x[16]) {
     s20_columnround(x);
     s20_rowround(x);
@@ -38,6 +42,7 @@ static uint32_t load32_le(const uint8_t *src) {
            ((uint32_t)src[2] << 16) | ((uint32_t)src[3] << 24);
 }
 
+//Hàm băm
 static void store32_le(uint8_t *dst, uint32_t val) {
     dst[0] = (uint8_t)(val);
     dst[1] = (uint8_t)(val >> 8);
@@ -53,6 +58,7 @@ static void s20_hash(uint8_t seq[64], const uint32_t state[16]) {
     for (i = 0; i < 16; ++i) store32_le(seq + (i * 4), x[i] + state[i]);
 }
 
+//Hằng số mở rộng
 static const uint8_t sigma[16] = "expand 32-byte k";
 static const uint8_t tau[16]   = "expand 16-byte k";
 
@@ -65,11 +71,11 @@ enum s20_status_t s20crypt(uint8_t *key,
                            uint32_t buflen) {
     if (!key || !nonce || !input || !output) return S20_FAILURE;
 
-    uint32_t state[16];
-    uint8_t block[64];
+    uint32_t state[16]; //Ma trận trạng thái
+    uint8_t block[64];   //Khối Keystream 
     const uint8_t *constants;
 
-    if (keylen == S_20_KEY_256) {
+    if (keylen == S20_KEY_256) {
         constants = sigma;
         state[1] = load32_le(key + 0);
         state[2] = load32_le(key + 4);
@@ -112,7 +118,7 @@ enum s20_status_t s20crypt(uint8_t *key,
         output[i] = input[i] ^ block[i % 64];
     }
 
-    return S_20_SUCCESS;
+    return S20_SUCCESS;
 }
 
 // int main() {
